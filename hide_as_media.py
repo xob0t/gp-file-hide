@@ -37,14 +37,11 @@ def create_empty_bmp(file_path):
 def create_empty_mp4(output_path):
     command = [
         'ffmpeg',
-        '-t', '1',             # Duration 1 second
-        '-f', 'lavfi',
-        '-i', 'anullsrc',      # Null audio source
-        '-vf', 'nullsrc',      # Null video source
-        '-c:v', 'libx264',
-        '-pix_fmt', 'yuv420p', # Pixel format
-        '-y',                  # Overwrite output file if it exists
-        output_path
+        '-y',                    # Overwrite output file without asking
+        '-f', 'lavfi',           # Use lavfi format
+        '-t', '1',               # Duration of 1 second
+        '-pix_fmt', 'yuv420p',   # Pixel format for web compatibility
+        output_file
     ]
     subprocess.run(command, check=True)
 
