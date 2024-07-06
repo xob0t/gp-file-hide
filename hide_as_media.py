@@ -63,16 +63,25 @@ filename = target_file_path.name.encode("utf-8")
 filename_length = struct.pack("I", len(filename))
 chunk_size = 1024 * 1024  # 1 MB
 
-with open(output_file_name, "rb") as bmp_file, open(target_file_path, "rb") as inject_file, open(output_file_name, "wb") as new_bmp_file:
-    # Copy the BMP file to the new BMP file
-    shutil.copyfileobj(bmp_file, new_bmp_file, chunk_size)
+# Create a temporary output file
+output_temp_file = output_file_name + '.temp'
 
+with open(output_file_name, "rb") as media_file, \
+     open(target_file_path, "rb") as inject_file, \
+     open(output_temp_file, "wb") as new_media_file:
+    
+    # Copy the original media file to the new media file
+    shutil.copyfileobj(media_file, new_media_file, chunk_size)
+    
     # Write the marker, filename length, and filename
-    new_bmp_file.write(marker)
-    new_bmp_file.write(filename_length)
-    new_bmp_file.write(filename)
+    new_media_file.write(marker)
+    new_media_file.write(filename_length)
+    new_media_file.write(filename)
+    
+    # Append the data file to the new media file
+    shutil.copyfileobj(inject_file, new_media_file, chunk_size)
 
-    # Append the data file to the new BMP file
-    shutil.copyfileobj(inject_file, new_bmp_file, chunk_size)
+# Replace the original output file with the new one
+Path(output_temp_file).replace(output_file_name)
 
 print(f"Created media with injected data: {output_file_name}")
