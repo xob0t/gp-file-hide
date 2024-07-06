@@ -1,12 +1,16 @@
 import shutil
 import struct
 from pathlib import Path
+import subprocess
 
 TARGET_FILE_PATH_STRING = "hello_world.test"
-OUTPUT_FILE_SUFFIX = ".bmp"
+HIDE_AS_IMAGE = True        # False to hide as video
+IMAGE_FILE_SUFFIX = ".bmp"
+VIDEO_FILE_SUFFIX = ".mp4"
 
 # Step 1: Create an empty BMP image file
-def create_empty_bmp(file_path, width, height, color):
+def create_empty_bmp(file_path):
+    width, height, color = 320, 240, (0, 0, 0)
     # BMP Header
     file_size = 54 + (width * height * 3)  # header size + pixel data
     bmp_header = b'BM' + struct.pack('<I', file_size) + b'\x00\x00' + b'\x00\x00' + b'\x36\x00\x00\x00'
@@ -20,8 +24,8 @@ def create_empty_bmp(file_path, width, height, color):
     
     # Pixel Data
     pixel_data = bytearray()
-    for y in range(height):
-        for x in range(width):
+    for _ in range(height):
+        for _ in range(width):
             pixel_data.extend(color)
     
     # Write to file
@@ -30,10 +34,28 @@ def create_empty_bmp(file_path, width, height, color):
         f.write(dib_header)
         f.write(pixel_data)
 
+def create_empty_mp4(output_path):
+    command = [
+        'ffmpeg',
+        '-t', '1',             # Duration 1 second
+        '-f', 'lavfi',
+        '-i', 'anullsrc',      # Null audio source
+        '-vf', 'nullsrc',      # Null video source
+        '-c:v', 'libx264',
+        '-pix_fmt', 'yuv420p', # Pixel format
+        '-y',                  # Overwrite output file if it exists
+        output_path
+    ]
+    subprocess.run(command, check=True)
+
 # Create a 320x240 black BMP image
 target_file_path = Path(TARGET_FILE_PATH_STRING)
-output_bmp_file = target_file_path.name + OUTPUT_FILE_SUFFIX
-create_empty_bmp(output_bmp_file, 320, 240, (0, 0, 0))
+if HIDE_AS_IMAGE:
+    output_file_name = target_file_path.name + IMAGE_FILE_SUFFIX
+    create_empty_bmp(output_file_name)
+else:
+    output_file_name = target_file_path.name + VIDEO_FILE_SUFFIX
+    create_empty_mp4(output_file_name)
 
 # Step 2: Define the marker and append the bytes to the BMP file
 marker = b"FILE_DATA_BEGIN"
@@ -41,7 +63,7 @@ filename = target_file_path.name.encode("utf-8")
 filename_length = struct.pack("I", len(filename))
 chunk_size = 1024 * 1024  # 1 MB
 
-with open(output_bmp_file, "rb") as bmp_file, open(target_file_path, "rb") as inject_file, open(output_bmp_file, "wb") as new_bmp_file:
+with open(output_file_name, "rb") as bmp_file, open(target_file_path, "rb") as inject_file, open(output_file_name, "wb") as new_bmp_file:
     # Copy the BMP file to the new BMP file
     shutil.copyfileobj(bmp_file, new_bmp_file, chunk_size)
 
@@ -53,4 +75,4 @@ with open(output_bmp_file, "rb") as bmp_file, open(target_file_path, "rb") as in
     # Append the data file to the new BMP file
     shutil.copyfileobj(inject_file, new_bmp_file, chunk_size)
 
-print(f"Created BMP with injected data: {output_bmp_file}")
+print(f"Created media with injected data: {output_file_name}")
