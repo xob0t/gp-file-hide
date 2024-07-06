@@ -2,15 +2,26 @@ import shutil
 import struct
 from pathlib import Path
 import subprocess
+import random
 
 TARGET_FILE_PATH_STRING = "hello_world.test"
 HIDE_AS_IMAGE = True        # False to hide as video
 IMAGE_FILE_SUFFIX = ".bmp"
 VIDEO_FILE_SUFFIX = ".mp4"
 
-# Step 1: Create an empty BMP image file
+def generate_random_color():
+    """Generate a random RGB color."""
+    r = random.randint(0, 255)
+    g = random.randint(0, 255)
+    b = random.randint(0, 255)
+    return (r, g, b)
+
+def rgb_to_hex(r, g, b):
+    """Convert RGB color to hexadecimal string."""
+    return f'#{r:02x}{g:02x}{b:02x}'
+
 def create_empty_bmp(file_path):
-    width, height, color = 320, 240, (0, 0, 0)
+    width, height, color = 320, 240, generate_random_color()
     # BMP Header
     file_size = 54 + (width * height * 3)  # header size + pixel data
     bmp_header = b'BM' + struct.pack('<I', file_size) + b'\x00\x00' + b'\x00\x00' + b'\x36\x00\x00\x00'
@@ -34,11 +45,15 @@ def create_empty_bmp(file_path):
         f.write(dib_header)
         f.write(pixel_data)
 
-def create_empty_mp4(output_path):
+def generate_random_color_video(output_file):
+    """Generate a 1-second MP4 video with a random background color."""
+    color = generate_random_color()
+    color_hex = rgb_to_hex(*color)
     command = [
         'ffmpeg',
         '-y',                    # Overwrite output file without asking
         '-f', 'lavfi',           # Use lavfi format
+        '-i', f'color={color_hex}:s=1280x720',  # Color filter
         '-t', '1',               # Duration of 1 second
         '-pix_fmt', 'yuv420p',   # Pixel format for web compatibility
         output_file
@@ -52,9 +67,9 @@ if HIDE_AS_IMAGE:
     create_empty_bmp(output_file_name)
 else:
     output_file_name = target_file_path.name + VIDEO_FILE_SUFFIX
-    create_empty_mp4(output_file_name)
+    generate_random_color_video(output_file_name)
 
-# Step 2: Define the marker and append the bytes to the BMP file
+# Define the marker and append the bytes to the media file
 marker = b"FILE_DATA_BEGIN"
 filename = target_file_path.name.encode("utf-8")
 filename_length = struct.pack("I", len(filename))
