@@ -14,6 +14,10 @@ The output file structure is:
   4. Filename
   5. Target file
 
+## Important!
+If you upload such file in "Storage saver" quality, any info that was appended to it by this script will be stripped and lost!
+Same will happen if you convert it later by changing the global storage quiality.
+
 ### undo.py
 Restores the file as it was before running `hide_as_media.py`.  
 Done by searching for the separator, and exctracting info in it found.
