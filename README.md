@@ -1,7 +1,7 @@
 ## Why?
 Google Photos allows only media uploads.
 You'd find this useful if you want to:
-* Store even not supported files
+* Store not supported files
 * Hide your media from Google, this way you can even store it encrypted
 
 ### hide_as_media.py
