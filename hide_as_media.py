@@ -20,7 +20,7 @@ def rgb_to_hex(r, g, b):
     """Convert RGB color to hexadecimal string."""
     return f'#{r:02x}{g:02x}{b:02x}'
 
-def create_empty_bmp(file_path):
+def generate_random_color_image(file_path):
     width, height, color = 320, 240, generate_random_color()
     # BMP Header
     file_size = 54 + (width * height * 3)  # header size + pixel data
@@ -64,13 +64,13 @@ def generate_random_color_video(output_file):
 target_file_path = Path(TARGET_FILE_PATH_STRING)
 if HIDE_AS_IMAGE:
     output_file_name = target_file_path.name + IMAGE_FILE_SUFFIX
-    create_empty_bmp(output_file_name)
+    generate_random_color_image(output_file_name)
 else:
     output_file_name = target_file_path.name + VIDEO_FILE_SUFFIX
     generate_random_color_video(output_file_name)
 
-# Define the marker and append the bytes to the media file
-marker = b"FILE_DATA_BEGIN"
+# Define the separator and append the bytes to the media file
+separator = b"FILE_DATA_BEGIN"
 filename = target_file_path.name.encode("utf-8")
 filename_length = struct.pack("I", len(filename))
 chunk_size = 1024 * 1024  # 1 MB
@@ -85,8 +85,8 @@ with open(output_file_name, "rb") as media_file, \
     # Copy the original media file to the new media file
     shutil.copyfileobj(media_file, new_media_file, chunk_size)
     
-    # Write the marker, filename length, and filename
-    new_media_file.write(marker)
+    # Write the separator, filename length, and filename
+    new_media_file.write(separator)
     new_media_file.write(filename_length)
     new_media_file.write(filename)
     
