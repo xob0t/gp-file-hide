@@ -20,4 +20,4 @@ Same will happen if you convert it later by changing the global storage quiality
 
 ### undo.py
 Restores the file as it was before running `hide_as_media.py`.  
-Done by searching for the separator, and exctracting info in it found.
+Done by searching for the separator, and exctracting info if it was found.
