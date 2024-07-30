@@ -1,8 +1,8 @@
 ## Google Photos allows only media uploads, but what if you want to upload other filetypes or hide your media from google?
 
 ### hide_as_media.py
-This script generates a media (with random color!), then appends your file's bytes to it.
-The original file's filename is also saved.
+This script generates a media (with random color!), then appends your file's bytes to it.  
+The original file's filename is also saved within, so you can rename the output if you need to.  
 The output file structure is:
   1. Media
   2. Separator string
