@@ -4,7 +4,6 @@ import struct
 # File names
 TARGET_FILE_PATH_STRING = "hello_world.test.bmp"
 SEPARATOR = b"FILE_DATA_BEGIN"
-separator_size = len(SEPARATOR)
 CHUNK_SIZE = 1024 * 1024  # 1 MB
 RESTORED_FILE_SUFFIX = ".restored"
 
@@ -22,7 +21,7 @@ def find_separator_and_filename(file_path, separator, chunk_size):
             separator_position = buffer.find(separator)
             if separator_position != -1:
                 # Calculate the position of the separator and filename
-                file.seek(file_position + separator_position + separator_size)
+                file.seek(file_position + separator_position + len(separator))
                 filename_length = struct.unpack("I", file.read(4))[0]
                 filename = file.read(filename_length).decode("utf-8")
                 return file_position + separator_position, filename
@@ -48,7 +47,7 @@ with open(TARGET_FILE_PATH_STRING, "rb") as combined_file, open(original_filenam
         remaining_size -= len(chunk)
 
     # Skip the separator, filename length, and filename
-    combined_file.seek(separator_position + separator_size)
+    combined_file.seek(separator_position + len(SEPARATOR))
     filename_length = struct.unpack("I", combined_file.read(4))[0]
     combined_file.seek(filename_length, os.SEEK_CUR)
 
