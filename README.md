@@ -1,4 +1,8 @@
-## Google Photos allows only media uploads, but what if you want to upload other filetypes or hide your media from google?
+## Why?
+Google Photos allows only media uploads.
+You'd find this useful if you want to:
+* Store even not supported files
+* Hide your media from Google, this way you can even store it encrypted
 
 ### hide_as_media.py
 This script generates a media (with random color!), then appends your file's bytes to it.  
