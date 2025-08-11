@@ -11,11 +11,7 @@ Made to be compatible with Google Photos.
 ## Installation
 
 ```bash
-# Install with uv
-uv pip install -e .
-
-# Or install with pip
-pip install -e .
+pip install https://github.com/xob0t/gp_disguise/archive/refs/heads/main.zip
 ```
 
 ## Requirements
@@ -93,7 +89,7 @@ gpd extract -o recovered/ **/*.bmp **/*.mp4
 ## Programmatic Usage
 
 ```python
-from media_disguise import MediaHider, MediaExtractor, Config
+from gp_disguise import MediaHider, MediaExtractor, Config
 from pathlib import Path
 
 # Hide a file
