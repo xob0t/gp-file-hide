@@ -107,7 +107,7 @@ def extract_command(args: argparse.Namespace) -> int:
 def main() -> int:
     """Main entry point for the CLI."""
     parser = argparse.ArgumentParser(
-        prog="gp-disguise",
+        prog="gp_disguise",
         description="Hide and extract data in media files",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""

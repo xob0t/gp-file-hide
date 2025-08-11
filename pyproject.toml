@@ -1,12 +1,12 @@
 [project]
-name = "gp-disguise"
+name = "gp_disguise"
 version = "0.1.0"
 description = "Hide and extract data in media files"
 requires-python = ">=3.9"
 dependencies = []
 
 [project.scripts]
-gp-disguise = "gp_disguise.cli:main"
+gp_disguise = "gp_disguise.cli:main"
 gpd = "gp_disguise.cli:main"
 
 [build-system]

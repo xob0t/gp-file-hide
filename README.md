@@ -1,4 +1,4 @@
-# gp-disguise
+# gp_disguise
 
 Hide and extract data in media files (BMP images and MP4 videos).  
 Made to be compatible with Google Photos.
@@ -6,7 +6,7 @@ Made to be compatible with Google Photos.
 > **⚠️ Security Notice**  
 > This tool **does not encrypt** your files. It only hides them by appending their raw data to a media file.  
 > Anyone with access to the media file and knowledge of the format could recover the data without your password.  
-> If you need confidentiality, encrypt your files first (e.g., with `gpg` or `openssl`) before using `gp-disguise`.
+> If you need confidentiality, encrypt your files first (e.g., with `gpg` or `openssl`) before using `gp_disguise`.
 
 ## Installation
 
